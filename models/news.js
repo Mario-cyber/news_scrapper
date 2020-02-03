@@ -22,7 +22,7 @@ var NewsSchema = new Schema({
     // This allows us to populate the News with an associated Article
     note: {
         type: Schema.Types.ObjectId,
-        ref: "Note"
+        ref: "Comment"
     }
 });
 
