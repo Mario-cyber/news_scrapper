@@ -3,7 +3,7 @@ var mongoose = require("mongoose");
 // Save a reference to the Schema constructor
 var Schema = mongoose.Schema;
 
-// Using the Schema constructor, create a new UserSchema object
+
 // This is similar to a Sequelize model
 var NewsSchema = new Schema({
     // `title` is required and of type String
@@ -16,9 +16,10 @@ var NewsSchema = new Schema({
         type: String,
         required: true
     },
-    // `note` is an object that stores a Note id
-    // The ref property links the ObjectId to the Note model
-    // This allows us to populate the Article with an associated Note
+
+    // optional comment value that we import from our comment schema  
+    // The ref property links the ObjectId to the comment model
+    // This allows us to populate the News with an associated Article
     note: {
         type: Schema.Types.ObjectId,
         ref: "Note"
