@@ -90,18 +90,39 @@ app.get("/news", function (req, res) {
         });
 });
 
+
+// route for getting a specific route article based on its db ID 
+
+// Route for grabbing a specific Article by id, populate it with it's note
+app.get("/news/:id", function (req, res) {
+    // Using the id passed in the id parameter, prepare a query that finds the matching one in our db...
+    db.News.findOne({
+            _id: req.params.id
+        })
+        // ..and populate all of the notes associated with it
+        .populate("Comment")
+        .then(function (dbNew) {
+            // If we were able to successfully find an Article with the given id, send it back to the client
+            res.json(dbNew);
+        })
+        .catch(function (err) {
+            // If an error occurred, send it to the client
+            res.json(err);
+        });
+});
+
 // cearing databases  
 
-// app.delete("/clear", function (req, res) {
-//     db.News.deleteMany({})
-//         .then(function (dbNew) {
+// app.delete("/delete/:id", function (req, res) {
+//     db.News.deleteMany({}, function (err, result) {
+//         if (err) {
+//             res.send(err);
+//         } else {
+//             res.send(result);
 //             console.log("Articles deleted.");
-//             res.json("deleted");
-//         })
-//         .catch(function (err) {
-//             res.json(err);
-//         })
-// })​
+//         }
+//     })
+// })
 
 
 app.get("/public/app.js", function (req, res) {

@@ -20,7 +20,7 @@ var NewsSchema = new Schema({
     // optional comment value that we import from our comment schema  
     // The ref property links the ObjectId to the comment model
     // This allows us to populate the News with an associated Article
-    note: {
+    comment: {
         type: Schema.Types.ObjectId,
         ref: "Comment"
     }
