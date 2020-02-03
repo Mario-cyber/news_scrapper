@@ -33,32 +33,37 @@ app.use(express.json());
 // Make public a static folder
 app.use(express.static("public"));
 
-// using a GET route to carry out our scrapping 
 
+// display HTML 
+app.get("/survey", function (req, res) {
+    res.sendFile(path.join(__dirname, "/public/index.html"));
+
+});
+
+// using a GET route to carry out our scrapping 
 app.get("/scrape", function (req, res) {
     // First, we grab the body of the html with axios
-    axios.get("http://www.echojs.com/").then(function (response) {
+    axios.get("https://www.bbc.com/").then(function (response) {
         // Then, we load that into cheerio and save it to $ for a shorthand selector
         var $ = cheerio.load(response.data);
 
-        console.log(response)
-        // Now, we grab every h2 within an article tag, and do the following:
-        $("article h2").each(function (i, element) {
-            // Save an empty result object
-            var result = {};
-
-            // Add the text and href of every link, and save them as properties of the result object
-            result.title = $(this)
-                .children("a")
-                .text();
-            result.link = $(this)
-                .children("a")
-                .attr("href")
-
-        });
+        $(".media__link").each((index, element) => {
+            // define an empty object to save data 
+            let article = {}
+            // find the tittle of our article
+            article.tittle = $(element).text()
+            console.log(article.tittle)
+            // find the link
+            article.link = $(element).attr('href')
+            console.log(article.link)
+        })
     });
-    // console.log("this is my resut: " + result)
+    res.send("Scrape Complete")
 });
+
+app.get("/dummy.js", function (req, res) {
+    res.sendFile(path.join(__dirname, "/public/"));
+})
 
 app.listen(PORT, function () {
     console.log("App running on port " + PORT + "!");
