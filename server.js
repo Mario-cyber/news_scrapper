@@ -12,7 +12,7 @@ let axios = require("axios");
 let cheerio = require("cheerio");
 
 // require our db models:
-let db = require("./models");
+let db = require("./models/Index");
 
 // define our server port:
 
@@ -33,9 +33,13 @@ app.use(express.json());
 // Make public a static folder
 app.use(express.static("public"));
 
+// Connect to the Mongo DB
+mongoose.connect("mongodb://localhost/unit18Populater", {
+    useNewUrlParser: true
+});
 
 // display HTML 
-app.get("/survey", function (req, res) {
+app.get("/", function (req, res) {
     res.sendFile(path.join(__dirname, "/public/index.html"));
 
 });
@@ -52,15 +56,15 @@ app.get("/scrape", function (req, res) {
             let result = {}
             // find the tittle of our article
             result.title = $(element).text().trim()
-            console.log(result.title)
+            // console.log(result.title)
             // find the link
             result.link = $(element).attr('href')
-            console.log(result.link)
+            // console.log(result.link) 
 
             db.News.create(result)
-                .then(function (dbNew) {
+                .then(function (dbNews) {
                     // View the added result in the console
-                    console.log(dbNew);
+                    console.log(dbNews);
                 })
                 .catch(function (err) {
                     // If an error occurred, log it
@@ -73,8 +77,6 @@ app.get("/scrape", function (req, res) {
 });
 
 // route to display JSON fomatted result from scrapping 
-
-
 app.get("/news", function (req, res) {
     // Grab every document in the News collection
     db.News.find({})
@@ -88,8 +90,21 @@ app.get("/news", function (req, res) {
         });
 });
 
+// cearing databases  
 
-app.get("/dummy.js", function (req, res) {
+// app.delete("/clear", function (req, res) {
+//     db.News.deleteMany({})
+//         .then(function (dbNew) {
+//             console.log("Articles deleted.");
+//             res.json("deleted");
+//         })
+//         .catch(function (err) {
+//             res.json(err);
+//         })
+// })​
+
+
+app.get("/public/app.js", function (req, res) {
     res.sendFile(path.join(__dirname, "/public/"));
 })
 
