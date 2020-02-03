@@ -49,17 +49,45 @@ app.get("/scrape", function (req, res) {
 
         $(".media__link").each((index, element) => {
             // define an empty object to save data 
-            let article = {}
+            let result = {}
             // find the tittle of our article
-            article.tittle = $(element).text()
-            console.log(article.tittle)
+            result.title = $(element).text().trim()
+            console.log(result.title)
             // find the link
-            article.link = $(element).attr('href')
-            console.log(article.link)
+            result.link = $(element).attr('href')
+            console.log(result.link)
+
+            db.News.create(result)
+                .then(function (dbNew) {
+                    // View the added result in the console
+                    console.log(dbNew);
+                })
+                .catch(function (err) {
+                    // If an error occurred, log it
+                    console.log(err);
+                });
+
         })
     });
     res.send("Scrape Complete")
 });
+
+// route to display JSON fomatted result from scrapping 
+
+
+app.get("/news", function (req, res) {
+    // Grab every document in the News collection
+    db.News.find({})
+        .then(function (dbNew) {
+            // If we were able to successfully find news, send them back to the client
+            res.json(dbNew);
+        })
+        .catch(function (err) {
+            // If an error occurred, send it to the client
+            res.json(err);
+        });
+});
+
 
 app.get("/dummy.js", function (req, res) {
     res.sendFile(path.join(__dirname, "/public/"));
